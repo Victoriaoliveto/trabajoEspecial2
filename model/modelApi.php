@@ -25,6 +25,15 @@ public function getAll($order=null) {
      return $zapatillas;
                 }
 
+    public function get($id) {
+      $query = $this->db->prepare("SELECT * FROM zapatilla WHERE id_= ?");
+      $query->execute([$id]);
+      $zapatilla = $query->fetch(PDO::FETCH_OBJ);
+                    
+      return $zapatilla;
+                }
+            
+
 public function getZapatillaId ($id_zapatilla) {
     $query = $this->db->prepare("SELECT * FROM zapatilla INNER JOIN marca ON zapatilla.id_marca=marca.id_marca WHERE id_=?");
     $query->execute(array($id_zapatilla));
@@ -33,11 +42,13 @@ public function getZapatillaId ($id_zapatilla) {
 }
 
 
-public function insertZapatilla($modelo, $precio, $stock) {
+public function insertZapatilla($modelo, $precio, $stock, $id_marca) {
+  
     $query = $this->db->prepare("INSERT INTO zapatilla (Modelo, 
-    Precio, Stock) VALUES(?, ?, ?)");
-   return $query->execute(array($modelo,$precio, $stock));
-      
+         Precio, Stock, id_marca) VALUES(?, ?, ?, ?)");
+        return $query->execute(array($modelo,$precio,$stock, $id_marca));
+           
+
 
 }
 function getMarcas(){
@@ -46,7 +57,7 @@ function getMarcas(){
     $mar = $query->fetchAll(PDO::FETCH_OBJ);
     return $mar;
 }
-
+      
 
 
 function GetMarcaID($id){
@@ -54,6 +65,7 @@ function GetMarcaID($id){
     $sentencia->execute(array($id));
     return $sentencia->fetch(PDO::FETCH_OBJ);
 }
+
 public  function getZapatillasPorMarca($id){
     $sentencia = $this->db->prepare("SELECT * FROM zapatilla INNER JOIN marca ON zapatilla.id_marca=marca.id_marca WHERE 
     zapatilla.id_marca=?");

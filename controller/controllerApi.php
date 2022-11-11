@@ -50,7 +50,7 @@ class ControllerApi {
 
    
 
-    function homeFilter($params = null){
+ public function homeFilter($params = null){
        $id =  $params[':Nombre'];
   
     $marca=$this->model->GetMarcaID($id);
@@ -62,15 +62,15 @@ class ControllerApi {
     $this->view->response(" id=$id No existe", 400);
 }
 
-    public function insertZapatilla($params = null) {
+    public function insertZapatilla ($params = null) {
         
         $zapatilla = $this->getData();
         
         if (empty($zapatilla->Modelo) || empty($zapatilla->Precio) || empty($zapatilla->Stock)) {
             $this->view->response("Ingrese los datos", 400);
         } else {
-            $this->model->insertZapatilla($zapatilla->Modelo, $zapatilla->Precio, $zapatilla->Stock);
-           
+            $id =  $this->model->insertZapatilla ($zapatilla->Modelo, $zapatilla->Precio, $zapatilla->Stock,$zapatilla-> Descripcion);
+            $zapatilla = $this->model->get($id);
             $this->view->response($zapatilla, 201);
         }
     }
