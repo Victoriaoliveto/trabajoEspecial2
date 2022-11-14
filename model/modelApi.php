@@ -42,7 +42,7 @@ function getMarcas(){
 }
 
 public  function getZapatillasPorMarca($id){
-    $sentencia = $this->db->prepare("SELECT * FROM zapatilla  LIMIT 5 OFFSET 3");
+    $sentencia = $this->db->prepare("SELECT * FROM zapatilla WHERE id_marca=$id");
     $sentencia->execute();
     return $sentencia->fetchAll(PDO::FETCH_OBJ);
 

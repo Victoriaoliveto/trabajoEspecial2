@@ -22,7 +22,7 @@ class ControllerApi {
 
     public function getZapatilla($params = null){
 
-        $order = isset ($_GET['order'] )? $_GET['order'] : "DESC";    
+        $order = isset ($_GET['order'])? $_GET['order'] : "DESC";    
         $sort = isset ($_GET['sort'] )? $_GET['sort'] :"id_";
 
         $zapatilla = $this->model->getAll($order, $sort);
@@ -44,14 +44,15 @@ class ControllerApi {
    
 
     function homeFilter($params = null){
-       $id =  $params[':ID'];
-  
-    $zapatillasPorMarca=$this->model->getZapatillasPorMarca($id);
-    if ($zapatillasPorMarca != null)
-    $this->view->response($zapatillasPorMarca, 200);
-    else 
-    $this->view->response("id= $id No existe", 400);
-}
+        $id =  $params[':ID'];
+   
+     $zapatillasPorMarca=$this->model->getZapatillasPorMarca($marca);
+     if ($zapatillasPorMarca != null)
+     $this->view->response($zapatillasPorMarca, 200);
+     else 
+     $this->view->response("id= $id No existe", 400);
+ }
+ 
 
     public function insertZapatilla($params = null) {
         
