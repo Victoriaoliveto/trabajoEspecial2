@@ -22,18 +22,11 @@ class ControllerApi {
 
     public function getZapatilla($params = null){
 
-        if (!empty($params[':order'])){
-            $order = $params [':order'];
-        if ($order =="desc"){
-         $zapatilla = $this->model->getAll($order);
-        }else if($order =="asc"){
-         $zapatilla = $this->model->getAll($order);
+        $order = isset ($_GET['order'] )? $_GET['order'] : "DESC";    
+        $sort = isset ($_GET['sort'] )? $_GET['sort'] :"id_";
 
-        }
-     }else {
-            $zapatilla = $this->model->getAll();
-        }
-        $this->view->response($zapatilla,200);
+        $zapatilla = $this->model->getAll($order, $sort);
+        $this->view->response($zapatilla, 200);
     
     }
 
@@ -42,7 +35,7 @@ class ControllerApi {
         $id_zapatilla = $params[':ID'];
         $zapatilla = $this->model->getZapatillaId($id_zapatilla);
    
-        if ($zapatilla)
+        if ($zapatilla != null)
             $this->view->response($zapatilla);
         else 
             $this->view->response(" id=$id_zapatilla No existe", 404);
@@ -50,28 +43,30 @@ class ControllerApi {
 
    
 
- public function homeFilter($params = null){
-       $id =  $params[':Nombre'];
+    function homeFilter($params = null){
+       $id =  $params[':ID'];
   
-    $marca=$this->model->GetMarcaID($id);
-    $zapatillasPorMarca=$this->model->getZapatillasPorMarca($marca);
-   // $marcaElegida=$this->model->getMarcas();
-    if ($id)
-    $this->view->response($zapatillasPorMarca,200);
+    $zapatillasPorMarca=$this->model->getZapatillasPorMarca($id);
+    if ($zapatillasPorMarca != null)
+    $this->view->response($zapatillasPorMarca, 200);
     else 
-    $this->view->response(" id=$id No existe", 400);
+    $this->view->response("id= $id No existe", 400);
 }
 
-    public function insertZapatilla ($params = null) {
+    public function insertZapatilla($params = null) {
         
         $zapatilla = $this->getData();
         
-        if (empty($zapatilla->Modelo) || empty($zapatilla->Precio) || empty($zapatilla->Stock)) {
+        if (empty($zapatilla->modelo) || empty($zapatilla->precio) || empty($zapatilla->stock)
+            || empty($zapatilla->id_marca) || empty($zapatilla->descripcion)) {
+
             $this->view->response("Ingrese los datos", 400);
+
         } else {
-            $id =  $this->model->insertZapatilla ($zapatilla->Modelo, $zapatilla->Precio, $zapatilla->Stock,$zapatilla-> Descripcion);
-            $zapatilla = $this->model->get($id);
-            $this->view->response($zapatilla, 201);
+            $nuevaZapatilla = $this->model->insertZapatilla($zapatilla->modelo, $zapatilla->precio, $zapatilla->stock, $zapatilla->id_marca, 
+            $zapatilla->descripcion, $zapatilla->imagen);
+           $resul = $this->model-> getZapatillaId ($nuevaZapatilla);
+            $this->view->response($resul, 201);
         }
     }
 
