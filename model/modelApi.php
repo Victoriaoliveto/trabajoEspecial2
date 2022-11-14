@@ -7,13 +7,22 @@ public function __construct() {
     $this->db = new PDO('mysql:host=localhost;'.'dbname=db_zapatilla;charset=utf8', 'root', '');
 }
 
-public function getAll($order, $sort) {
-    $sort =strtolower($sort);
-  $query = $this->db->prepare("SELECT * FROM zapatilla ORDER BY $sort $order");
-$query->execute();
-return $query->fetchAll(PDO::FETCH_OBJ);
+public function getAll($order, $sort, $marca) {
+    $sort = strtolower($sort);
+    if (!is_null($marca)) {
+        $query = $this->db->prepare("SELECT * FROM zapatilla  
+        JOIN marca  ON marca.id_marca = zapatilla.id_marca
+        where marca.nombre = $marca
+        ORDER BY $sort $order"); 
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_OBJ); 
+    }
+    $query = $this->db->prepare("SELECT * FROM zapatilla 
+    JOIN marca ON marca.id_marca= zapatilla.id_marca
+    ORDER BY $sort $order"); 
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_OBJ); 
 }
-   
 
 
 public function getZapatillaId ($id_zapatilla) {
@@ -29,9 +38,6 @@ public function insertZapatilla($modelo, $precio, $stock, $id_marca, $descripcio
     $query->fetch(PDO::FETCH_OBJ);
     return $this->db->lastInsertId();
 }
-
-      
-
 
 
 
