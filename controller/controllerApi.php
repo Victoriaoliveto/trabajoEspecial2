@@ -22,15 +22,13 @@ class ControllerApi {
 
     public function getZapatilla($params = null){
 
-        $order = isset($_GET['order']) ? $_GET['order'] : "DESC";    
-        $sort = isset($_GET['sort']) ? $_GET['sort'] : "id_"; 
-        $marca = isset($_GET['marca']) ? $_GET['marca'] : null; 
+        $order = isset ($_GET['order'])? $_GET['order'] : "DESC";    
+        $sort = isset ($_GET['sort'] )? $_GET['sort'] :"id_";
 
-        $zapatilla = $this->model->getAll($order, $sort, $marca);
+        $zapatilla = $this->model->getAll($order, $sort);
         $this->view->response($zapatilla, 200);
     
     }
-
 
     public function getZapatillaId($params = null) {
         
